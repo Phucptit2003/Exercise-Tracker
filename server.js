@@ -1,16 +1,21 @@
+// server.js (bản hoàn chỉnh)
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const { randomUUID } = require('crypto');
 
 const app = express();
+app.use(cors());
+
+// IMPORTANT: middleware để xử lý form data của FCC tests
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // In-memory storage
-const users = [];
-const logs = {};
+const users = [];      // [{ username, _id }]
+const logs = {};       // { _id: [ { description, duration, date: Date } ] }
 
-// Create user
+// POST /api/users -> tạo user mới
 app.post('/api/users', (req, res) => {
   const username = req.body.username;
   if (!username) return res.status(400).json({ error: 'username required' });
@@ -19,15 +24,18 @@ app.post('/api/users', (req, res) => {
   const newUser = { username, _id };
   users.push(newUser);
   logs[_id] = [];
+  // trả về đúng structure { username, _id }
   res.json(newUser);
 });
 
-// Get all users
+// GET /api/users -> danh sách users
 app.get('/api/users', (req, res) => {
-  res.json(users);
+  // đảm bảo mỗi phần tử chỉ có username và _id
+  const simplified = users.map(u => ({ username: u.username, _id: u._id }));
+  res.json(simplified);
 });
 
-// Add exercise
+// POST /api/users/:_id/exercises -> thêm exercise
 app.post('/api/users/:_id/exercises', (req, res) => {
   const _id = req.params._id;
   const user = users.find(u => u._id === _id);
@@ -41,7 +49,13 @@ app.post('/api/users/:_id/exercises', (req, res) => {
     return res.status(400).json({ error: 'description and duration required' });
   }
 
-  let dateObj = dateInput ? new Date(dateInput) : new Date();
+  let dateObj;
+  if (!dateInput) {
+    dateObj = new Date();
+  } else {
+    dateObj = new Date(dateInput);
+  }
+
   if (dateObj.toString() === 'Invalid Date') {
     return res.status(400).json({ error: 'Invalid Date' });
   }
@@ -58,7 +72,7 @@ app.post('/api/users/:_id/exercises', (req, res) => {
   });
 });
 
-// Get logs
+// GET /api/users/:_id/logs -> trả về log (hỗ trợ from,to,limit)
 app.get('/api/users/:_id/logs', (req, res) => {
   const _id = req.params._id;
   const user = users.find(u => u._id === _id);
@@ -80,6 +94,10 @@ app.get('/api/users/:_id/logs', (req, res) => {
     }
   }
 
+  // count = số lượng exercises **sau khi filter from/to?**
+  // Mình để count = userLogs.length (trước apply limit) — phù hợp với FCC reference.
+  const totalCount = userLogs.length;
+
   let limitedLogs = userLogs;
   if (limit) {
     const lim = parseInt(limit);
@@ -94,7 +112,7 @@ app.get('/api/users/:_id/logs', (req, res) => {
 
   res.json({
     username: user.username,
-    count: userLogs.length,
+    count: totalCount,
     _id: user._id,
     log: formatted
   });
