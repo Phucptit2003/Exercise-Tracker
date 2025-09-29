@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Exercise Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family: Arial, sans-serif; padding: 2rem; max-width: 900px; margin: auto; }
+form { margin-bottom: 1.5rem; }
+input, button { padding: .4rem; }
+pre { background: #f4f4f4; padding: 1rem; }
+</style>
+</head>
+<body>
+<h1>Exercise Tracker</h1>
+
+
+<h2>Create user</h2>
+<form method="POST" action="/api/users">
+<input name="username" placeholder="username" required>
+<button type="submit">Create</button>
+</form>
+
+
+<h2>Add exercise</h2>
+<form method="POST" action="/api/users/:_id/exercises" onsubmit="submitExercise(event)">
+<input id="uid" placeholder="user id (paste here)" required>
+<input name="description" id="desc" placeholder="description" required>
+<input name="duration" id="dur" placeholder="duration (minutes)" required>
+<input name="date" id="date" placeholder="yyyy-mm-dd (optional)">
+<button type="submit">Add</button>
+</form>
+
+
+<h2>Get logs</h2>
+<p>GET /api/users/:_id/logs?from=&to=&limit=</p>
+
+
+<h2>Examples / Notes</h2>
+<pre>
+POST /api/users -> { username: "fcc_test", _id: "..." }
+POST /api/users/:_id/exercises -> { username, description, duration, date: "Mon Jan 01 1990", _id }
+GET /api/users/:_id/logs -> { username, count, _id, log: [ { description, duration, date } ] }
+</pre>
+
+
+<script>
+async function submitExercise(e){
+e.preventDefault();
+const uid = document.getElementById('uid').value.trim();
+const desc = document.getElementById('desc').value.trim();
+const dur = document.getElementById('dur').value.trim();
+const date = document.getElementById('date').value.trim();
+const form = new URLSearchParams();
+form.append('description', desc);
+form.append('duration', dur);
+if(date) form.append('date', date);
+
+
+const res = await fetch('/api/users/' + uid + '/exercises', {
+method: 'POST',
+headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+body: form.toString()
+});
+const j = await res.json();
+alert(JSON.stringify(j));
+}
+</script>
+
+
+</body>
+</html>

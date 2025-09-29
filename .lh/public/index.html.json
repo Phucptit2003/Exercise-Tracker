@@ -1,0 +1,18 @@
+{
+    "sourceFile": "public/index.html",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759120464099,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759120464099,
+            "name": "Commit-0",
+            "content": "<!doctype html>\r\n<html>\r\n<head>\r\n<meta charset=\"utf-8\">\r\n<title>Exercise Tracker</title>\r\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\r\n<style>\r\nbody { font-family: Arial, sans-serif; padding: 2rem; max-width: 900px; margin: auto; }\r\nform { margin-bottom: 1.5rem; }\r\ninput, button { padding: .4rem; }\r\npre { background: #f4f4f4; padding: 1rem; }\r\n</style>\r\n</head>\r\n<body>\r\n<h1>Exercise Tracker</h1>\r\n\r\n\r\n<h2>Create user</h2>\r\n<form method=\"POST\" action=\"/api/users\">\r\n<input name=\"username\" placeholder=\"username\" required>\r\n<button type=\"submit\">Create</button>\r\n</form>\r\n\r\n\r\n<h2>Add exercise</h2>\r\n<form method=\"POST\" action=\"/api/users/:_id/exercises\" onsubmit=\"submitExercise(event)\">\r\n<input id=\"uid\" placeholder=\"user id (paste here)\" required>\r\n<input name=\"description\" id=\"desc\" placeholder=\"description\" required>\r\n<input name=\"duration\" id=\"dur\" placeholder=\"duration (minutes)\" required>\r\n<input name=\"date\" id=\"date\" placeholder=\"yyyy-mm-dd (optional)\">\r\n<button type=\"submit\">Add</button>\r\n</form>\r\n\r\n\r\n<h2>Get logs</h2>\r\n<p>GET /api/users/:_id/logs?from=&to=&limit=</p>\r\n\r\n\r\n<h2>Examples / Notes</h2>\r\n<pre>\r\nPOST /api/users -> { username: \"fcc_test\", _id: \"...\" }\r\nPOST /api/users/:_id/exercises -> { username, description, duration, date: \"Mon Jan 01 1990\", _id }\r\nGET /api/users/:_id/logs -> { username, count, _id, log: [ { description, duration, date } ] }\r\n</pre>\r\n\r\n\r\n<script>\r\nasync function submitExercise(e){\r\ne.preventDefault();\r\nconst uid = document.getElementById('uid').value.trim();\r\nconst desc = document.getElementById('desc').value.trim();\r\nconst dur = document.getElementById('dur').value.trim();\r\nconst date = document.getElementById('date').value.trim();\r\nconst form = new URLSearchParams();\r\nform.append('description', desc);\r\nform.append('duration', dur);\r\nif(date) form.append('date', date);\r\n\r\n\r\nconst res = await fetch('/api/users/' + uid + '/exercises', {\r\nmethod: 'POST',\r\nheaders: { 'Content-Type': 'application/x-www-form-urlencoded' },\r\nbody: form.toString()\r\n});\r\nconst j = await res.json();\r\nalert(JSON.stringify(j));\r\n}\r\n</script>\r\n\r\n\r\n</body>\r\n</html>"
+        }
+    ]
+}

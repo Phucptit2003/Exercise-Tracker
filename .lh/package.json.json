@@ -1,0 +1,18 @@
+{
+    "sourceFile": "package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1759120435001,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1759120435001,
+            "name": "Commit-0",
+            "content": "{\r\n\"name\": \"exercise-tracker\",\r\n\"version\": \"1.0.0\",\r\n\"description\": \"FreeCodeCamp Exercise Tracker - example implementation\",\r\n\"main\": \"server.js\",\r\n\"scripts\": {\r\n\"start\": \"node server.js\",\r\n\"dev\": \"nodemon server.js\"\r\n},\r\n\"dependencies\": {\r\n\"body-parser\": \"^1.20.2\",\r\n\"cors\": \"^2.8.5\",\r\n\"express\": \"^4.18.2\"\r\n},\r\n\"devDependencies\": {\r\n\"nodemon\": \"^2.0.22\"\r\n},\r\n\"author\": \"Your Name\",\r\n\"license\": \"MIT\"\r\n}"
+        }
+    ]
+}
